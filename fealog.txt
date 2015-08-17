@@ -1,0 +1,3 @@
+Initializing FEATool log file on 08-Jun-2015 19:39:08.
+
+Geom mode.
