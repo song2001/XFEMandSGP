@@ -55,43 +55,43 @@ global STRAINP CORDE INTP
  stress(3,2)=stress(2,3);
  
  if noel==3159    
-   if npt==3
+   if npt==21
    for i=1:4    
    STRAINP(noel,1,i)=dpstrn(i);
    end
    end  
-   if npt==50
+   if npt==24
    for i=1:4    
    STRAINP(noel,2,i)=dpstrn(i);
    end
    end 
-   if npt==14
+   if npt==35
    for i=1:4        
    STRAINP(noel,3,i)=dpstrn(i);
    end
    end    
-   if npt==27
+   if npt==31
    for i=1:4     
    STRAINP(noel,4,i)=dpstrn(i);  
    end
    end
  elseif noel==3041
-   if npt==4
+   if npt==45
    for i=1:4    
    STRAINP(noel,1,i)=dpstrn(i); 
    end
    end  
-   if npt==28
+   if npt==48
    for i=1:4    
    STRAINP(noel,2,i)=dpstrn(i);
    end
    end 
-   if npt==5
+   if npt==22
    for i=1:4    
    STRAINP(noel,3,i)=dpstrn(i);
    end
    end    
-   if npt==30
+   if npt==20
    STRAINP(noel,4,i)=dpstrn(i); 
    end   
  else
