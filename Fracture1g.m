@@ -9,7 +9,7 @@ clear variables
 global numcrack bcNodes edgNodes elemType %Equiv
 %
 % Introduce manually the number of nodes per element:
-Q=4;
+Q=8;
 if Q==4
 elemType = 'Q4' ;
 elseif Q==8
@@ -45,12 +45,12 @@ end
 % PROP=[YOUNG NU] (MAT=0)
 % PROP=[YOUNG NU SYIELD] (MAT=1) 
 % PROP=[YOUNG NU SYIELD ELLE N] (MAT=2)
-%MAT=0;
-%PROP=[260000, 0.3];
+MAT=0;
+PROP=[260000, 0.3];
 %MAT=2;
 %PROP=[260000 0.3 1000 200];
- MAT=3;
- PROP=[260000 0.3 200 0 0.2];
+% MAT=3;
+% PROP=[260000 0.3 200 0 0.2];
 %
 % Prescribed displacements [Node, DOF, Value]
 % Introduce the vertical displacement of the upper edge
