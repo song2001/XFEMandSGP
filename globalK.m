@@ -35,19 +35,19 @@ element=connect';
         GpTT(igp,:)=Gpnt;    
         end
 %       node1=[0.5774 0.5774; 0.5774 -0.5774;-0.5774 0.5774;-0.5774 -0.5774];
-       %node1=[1.4226 1.4226; -1.4226 1.4226;-1.4226 -1.4226;1.4226 -1.4226]; % For lmn==3159
-       node1=[-1.4226 -1.4226; 1.4226 -1.4226;1.4226 1.4226;-1.4226 1.4226]; % For lmn==3041
-       if lmn==3159 || lmn==3041
-       Temp= N'*node1;    
-       INTP(lmn,igp,1)= Temp(1);
-       INTP(lmn,igp,2)= Temp(2);
-       if lmn==3159
-       Prueba(igp,:)=[Temp];
-       end
-       if lmn==3041
-       Prueba1(igp,:)=[Temp];
-       end       
-       end
+%        %node1=[1.4226 1.4226; -1.4226 1.4226;-1.4226 -1.4226;1.4226 -1.4226]; % For lmn==3159
+%        node1=[-1.4226 -1.4226; 1.4226 -1.4226;1.4226 1.4226;-1.4226 1.4226]; % For lmn==3041
+%        if lmn==3159 || lmn==3041
+%        Temp= N'*node1;    
+%        INTP(lmn,igp,1)= Temp(1);
+%        INTP(lmn,igp,2)= Temp(2);
+%        if lmn==3159
+%        Prueba(igp,:)=[Temp];
+%        end
+%        if lmn==3041
+%        Prueba1(igp,:)=[Temp];
+%        end       
+%        end
 %        if lmn==3041    
 %        Temp= N'*node1;
 %        INTP(lmn,igp,1)= Temp(1);
