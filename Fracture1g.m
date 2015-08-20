@@ -9,7 +9,7 @@ clear variables
 global numcrack bcNodes edgNodes elemType %Equiv
 %
 % Introduce manually the order of the interpolation (FEM X-FEM):
-Q=[8 4];
+Q=[4 4];
 if Q(1)==4
 elemType = 'Q4' ;
 elseif Q(1)==8
