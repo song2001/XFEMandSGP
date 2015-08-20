@@ -1,4 +1,4 @@
-function [SIGMA]=EMPXFEM(xCrk,XY,XY1,LE,LE1,MAT,PROP,Dnodes,SOL,Dloads,enrType)
+function [SIGMA]=EMPXFEM(xCrk,XY,XY1,LE,LE1,MAT,PROP,Dnodes,SOL,Dloads,enrType,Q)
 
 global STRAINP
 %
@@ -17,13 +17,16 @@ global STRAINP
 
 Enrdomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ;
 % Identify enriched elements
-if (1)==8 && Q(2)==4
+if Q(1)==8 && Q(2)==4
 [Enrdomain] = crackDetect(xCrk,Enrdomain,XY1,LE1) ;
+% Classify elements
+[typeElem,elemCrk,tipElem,splitElem,vertexElem,xTip,xVertex,enrichNode]=nodeDetect(xCrk,Enrdomain,XY1,LE1) ;
+enrichNode(numel(XY(:,1))) = 0;
 else
 [Enrdomain] = crackDetect(xCrk,Enrdomain,XY,LE) ;
-end
 % Classify elements
 [typeElem,elemCrk,tipElem,splitElem,vertexElem,xTip,xVertex,enrichNode]=nodeDetect(xCrk,Enrdomain,XY,LE) ;
+end
 
 if strcmp(enrType,'geom')
   % find the area of tip element...

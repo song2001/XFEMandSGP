@@ -9,7 +9,7 @@ clear variables
 global numcrack bcNodes edgNodes elemType %Equiv
 %
 % Introduce manually the order of the interpolation (FEM X-FEM):
-Q=[4 4];
+Q=[8 4];
 if Q(1)==4
 elemType = 'Q4' ;
 elseif Q(1)==8
@@ -79,10 +79,10 @@ Dnodes(j,:)=[1 1 0];
 Dloads=[];
 % Solution controls [Number of steps, Convergence tolerance, maximum number
 % of iterations]
-SOL=[20, 1E-9, 50];
+SOL=[1, 1E-9, 50];
 % Calling main function and storing the stress tensor for every integration
 % point and every element
-[SIGMA]=EMPXFEM(xCr,XY,XY1,LE,LE1,MAT,PROP,Dnodes',SOL,Dloads',enrType);
+[SIGMA]=EMPXFEM(xCr,XY,XY1,LE,LE1,MAT,PROP,Dnodes',SOL,Dloads',enrType,Q);
 % Write to file
 outfile2=fopen('S22.txt','w');
 fprintf(outfile2,'\n %9.10f',SIGMA(2,2,17,3159));
