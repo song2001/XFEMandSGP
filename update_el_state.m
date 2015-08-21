@@ -1,5 +1,5 @@
-function [stress1,ep1,r1,etap1,ee1,epl1] = update_el_state(dt,ndof,coord,materialprops,stress0,eplas0,U,MAT,nelem,rE,egrad0,ee0el,epl0el,n,...
-    type_elem,enrich_node,elem_crk,xVertex,node,element,W,Q,sctr,xCrk,tip_elem)
+function [stress1,ep1,r1,etap1,ee1,epl1,stress_pnt,stress_val] = update_el_state(dt,ndof,coord,materialprops,stress0,eplas0,U,MAT,nelem,rE,egrad0,ee0el,epl0el,n,...
+    type_elem,enrich_node,elem_crk,xVertex,node,element,W,Q,sctr,xCrk,tip_elem,SOL,step,stress_pnt,stress_val)
 
 global elemType
 %
@@ -58,60 +58,14 @@ global elemType
         Gpt = Q(kk,:) ;
         [N,dNdxi] = lagrange_basis(elemType,Gpt) ;
         JO = node(sctr,:)'*dNdxi ;
+        pt = N' * node(sctr,:);
+        Gpnt = N'*node(sctr,:) ;
         for k = 1:size(xCrk,2)
             B = [B xfemBmat(Gpt,nelem,type_elem,enrich_node(:,k),elem_crk,xVertex,k,node,element,MAT,tip_elem)] ;
         end
         Ppoint =  N' * node(sctr,:);
         strain = B*U ;       
-
-%     Compute shape functions and derivatives wrt local coords
-%
-%      for i = 1 : ndof
-%        xi(i) = xilist(i,intpt);
-%      end      
-%      N = shapefunctions(n,ndof,xi);
-%      dNdxi = shapefunctionderivs(n,ndof,xi);    
-%
-%     Compute the jacobian matrix and its determinant
-%
-%      for i = 1 : ndof
-%        for j = 1 : ndof
-%          dxdxi(i,j) = 0.;
-%          for a = 1 : n
-%            dxdxi(i,j) = dxdxi(i,j) + coord(i,a)*dNdxi(a,j);
-%          end
-%        end
-%      end
-
-%      dxidx = inv(dxdxi);
-%      dtm = det(dxdxi);
-%
-%     Convert shape function derivatives to derivatives wrt global coords
-%
-%      for a = 1 : n
-%        for i = 1 : ndof
-%          dNdx(a,i) = 0.;
-%          for j = 1 : ndof
-%            dNdx(a,i) = dNdx(a,i) + dNdxi(a,j)*dxidx(j,i);
-%          end
-%        end
-%      end
-      
-%      if n==8
-%      Bmatr=zeros(3,16);
-%      Bmatr=[dNdx(1,1) 0 dNdx(2,1) 0 dNdx(3,1) 0 dNdx(4,1) 0 dNdx(5,1) 0 dNdx(6,1) 0 dNdx(7,1) 0 dNdx(8,1) 0;
-%      0 dNdx(1,2) 0 dNdx(2,2) 0 dNdx(3,2) 0 dNdx(4,2) 0 dNdx(5,2) 0 dNdx(6,2) 0 dNdx(7,2) 0 dNdx(8,2);
-%      dNdx(1,2) dNdx(1,1) dNdx(2,2) dNdx(2,1) dNdx(3,2) dNdx(3,1) dNdx(4,2) dNdx(4,1) dNdx(5,2) dNdx(5,1) dNdx(6,2) dNdx(6,1) dNdx(7,2) dNdx(7,1) dNdx(8,2) dNdx(8,1)];
-%      strain=Bmatr*[displacement(1,1) displacement(2,1) displacement(1,2) displacement(2,2) displacement(1,3) displacement(2,3) displacement(1,4) displacement(2,4)...
-%          displacement(1,5) displacement(2,5) displacement(1,6) displacement(2,6) displacement(1,7) displacement(2,7) displacement(1,8) displacement(2,8)]';
-%      else
-%      Bmatr=zeros(3,8);
-%      Bmatr=[dNdx(1,1) 0 dNdx(2,1) 0 dNdx(3,1) 0 dNdx(4,1) 0;
-%      0 dNdx(1,2) 0 dNdx(2,2) 0 dNdx(3,2) 0 dNdx(4,2);
-%      dNdx(1,2) dNdx(1,1) dNdx(2,2) dNdx(2,1) dNdx(3,2) dNdx(3,1) dNdx(4,2) dNdx(4,1)];
-%      strain=Bmatr*[displacement(1,1) displacement(2,1) displacement(1,2) displacement(2,2) displacement(1,3) displacement(2,3) displacement(1,4) displacement(2,4)]';  
-%      end
-      
+    
       if MAT > 0
       strain(4)=0.0; % Plane strain
       ep0 = eplas0(kk);
@@ -145,6 +99,11 @@ global elemType
       else
        stress = materialstress(ndof,strain,materialprops);
       end
+      
+      if step==SOL(1) %Plot stress contours
+        stress_pnt = [stress_pnt; pt] ;
+        stress_val = [stress_val; stress(2,2)] ;      
+      end    
       
       if MAT > 0   
        for i = 1 : 3

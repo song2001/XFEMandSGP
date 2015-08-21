@@ -1,5 +1,5 @@
 function [stress_new,eplas_new,r_new,eta_new,ee_new,ep_new] = update_state(dt,ndof,coords,nelem,connect,materialprops,stress,eplas,dofs,MAT,rG,eta,ee,ep,nne,...
-     enrich_node,elem_crk,type_elem,xTip,xVertex,split_elem,tip_elem,vertex_elem,pos,xCrk)
+     enrich_node,elem_crk,type_elem,xTip,xVertex,split_elem,tip_elem,vertex_elem,pos,xCrk,SOL,step)
 
 node=coords';
 element=connect';
@@ -7,6 +7,9 @@ element=connect';
 %
    lmncoord = zeros(ndof,nne);
    lmndof = zeros(ndof,nne);
+   
+   stress_pnt =  [ ] ;
+   stress_val = [ ] ;
 %
 %   Loop over all the elements
 %
@@ -62,8 +65,8 @@ element=connect';
       end
       end
       
-      [lmnstress,lmneplas,lmnR,lmnETAP,lmnEE,lmnEPL] = update_el_state(dt,ndof,lmncoord,materialprops,lmnstress,lmneplas,U,MAT,lmn,lmnR,lmnETAP,lmnEE,lmnEPL,n,...
-          type_elem,enrich_node,elem_crk,xVertex,node,element,W,Q,sctr,xCrk,tip_elem);
+      [lmnstress,lmneplas,lmnR,lmnETAP,lmnEE,lmnEPL,stress_pnt,stress_val] = update_el_state(dt,ndof,lmncoord,materialprops,lmnstress,lmneplas,U,MAT,lmn,lmnR,lmnETAP,lmnEE,lmnEPL,n,...
+          type_elem,enrich_node,elem_crk,xVertex,node,element,W,Q,sctr,xCrk,tip_elem,SOL,step,stress_pnt,stress_val);
 %
       if MAT > 0   
        for a = 1 : nintp
@@ -97,6 +100,18 @@ element=connect';
        end    
       end
 
-  end
- 
+   end
+
+   if step==SOL(1) %Plot stress contours
+      tri = delaunay(stress_pnt(:,1),stress_pnt(:,2)) ;    
+      figure
+      hold on
+      for i=1:size(tri,1)
+       fill(stress_pnt(tri(i,:),1),stress_pnt(tri(i,:),2),stress_val(tri(i,:))) ;
+      end
+   title('XFEM Stress')
+   shading interp
+   colorbar 
+   end
+
 end
