@@ -100,17 +100,6 @@ element=connect';
       
       resid(sctrB) = resid(sctrB) + elres ;
       
-     
-%
-%   Add the current element residual to the global residual
-%
-% CHANGE THIS
-%       for a = 1 : nne;
-%         for i = 1 : ndof
-%           rw = ndof*(connect(a,lmn)-1)+i;
-%           resid(rw) = resid(rw) + rel(ndof*(a-1)+i);
-%         end
-%       end
    end
  end
 end

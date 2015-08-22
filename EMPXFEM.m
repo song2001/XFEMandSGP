@@ -1,4 +1,4 @@
-function [SIGMA]=EMPXFEM(xCrk,XY,XY1,LE,LE1,MAT,PROP,Dnodes,SOL,Dloads,enrType,Q)
+function [SIGMA,stress_pnt,stress_val]=EMPXFEM(xCrk,XY,XY1,LE,LE1,MAT,PROP,Dnodes,SOL,Dloads,enrType,Q)
 
 global STRAINP
 %
@@ -159,7 +159,7 @@ for step = 1 : SOL(1)
   end
     
 % Update the stress and accumulated plastic strain
-     [SIGMA,EP,rG,ETAP,EE,EPL] = update_state(dt,Ndof,XY',NE,LE',PROP,SIGMA,EP,w,MAT,rG,ETAP,EE,EPL,NNE,...
+     [SIGMA,EP,rG,ETAP,EE,EPL,stress_pnt,stress_val] = update_state(dt,Ndof,XY',NE,LE',PROP,SIGMA,EP,w,MAT,rG,ETAP,EE,EPL,NNE,...
          enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,pos,xCrk,SOL,step);
      
 % Update the total displacecment

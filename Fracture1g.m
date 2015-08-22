@@ -9,7 +9,7 @@ clear variables
 global numcrack bcNodes edgNodes elemType %Equiv
 %
 % Introduce manually the order of the interpolation (FEM X-FEM):
-Q=[8 4];
+Q=[4 4];
 if Q(1)==4
 elemType = 'Q4' ;
 elseif Q(1)==8
@@ -82,9 +82,37 @@ Dloads=[];
 SOL=[1, 1E-9, 50];
 % Calling main function and storing the stress tensor for every integration
 % point and every element
-[SIGMA]=EMPXFEM(xCr,XY,XY1,LE,LE1,MAT,PROP,Dnodes',SOL,Dloads',enrType,Q);
+[SIGMA,stress_pnt,stress_val]=EMPXFEM(xCr,XY,XY1,LE,LE1,MAT,PROP,Dnodes',SOL,Dloads',enrType,Q);
+
+% Get results close to the crack tip
+tri = delaunay(stress_pnt(:,1),stress_pnt(:,2));
+coord=[0.0001 0; 0.0002 0; 0.0003 0; 0.0004 0; 0.0005 0; 0.0006 0; 0.0007 0; 0.0008 0; 0.0009 0; 0.001 0;
+       0.002 0; 0.003 0; 0.004 0; 0.005 0; 0.006 0; 0.007 0; 0.008 0; 0.009 0; 0.01 0; 0.015 0; 0.02 0; 0.025 0;
+       0.03 0; 0.035 0; 0.04 0; 0.05 0; 0.06 0; 0.07 0; 0.08 0; 0.09 0; 0.1 0; 0.12 0; 0.14 0; 0.16 0; 0.18 0;
+       0.2 0; 0.24 0; 0.28 0; 0.32 0; 0.38 0; 0.44 0; 0.5 0; 0.6 0; 0.7 0; 0.8 0; 0.9 0; 1 0; 1.5 0; 2 0; 3 0;
+       5 0; 10 0; 19 0];
+   
+%vq = griddata(x,y,v,xq,yq);
+vq = griddata(stress_pnt(:,1),stress_pnt(:,2),stress_val,coord(:,1),coord(:,2), 'linear'); 
+%In=0;   
+%for i=1:size(coord(:,1))
+%[N,dNdxi] = lagrange_basis(T3,coord(i,:));
+% for j=1:size(tri(:,1))
+%   for k=1:3
+%   xv(k)=stress_pnt(tri(j,k),1);
+%   yv(k)=stress_pnt(tri(j,k),2);
+%   end  
+% In=inpolygon(coord(i,1),coord(i,2),xv,yv);
+%   if In==1
+%   break
+%   end
+% end
+%OBTAIN STRESSES XV AND XY CONTAIN THE "nODAL" COORDINATES WELL, WE ARE INTERESTED IN 
+% OKAY, SOMEWHERE WE NEED TO INTRODUCE THE NATURAL COORDINATES, NOT THE
+% ISOPARAMETRIC ONES
+%end
 % Write to file
-outfile2=fopen('S22.txt','w');
+%outfile2=fopen('S22.txt','w');
 %fprintf(outfile2,'\n %9.10f',SIGMA(2,2,17,3159));
 %fprintf(outfile2,'\n %9.10f',SIGMA(2,2,5,3159));
 %fprintf(outfile2,'\n %9.10f',SIGMA(2,2,10,3159));
@@ -97,43 +125,43 @@ outfile2=fopen('S22.txt','w');
 %fprintf(outfile2,'\n %9.10f',SIGMA(2,2,23,3041));
 %fprintf(outfile2,'\n %9.10f',SIGMA(2,2,31,3041));
 %fprintf(outfile2,'\n %9.10f',SIGMA(2,2,27,3041));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3042));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3042));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3043));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3043));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3044));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3044));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3045));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3045));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3046));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3046));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3047));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3047));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3048));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3048));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3049));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3049));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3050));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3050));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3051));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3051));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3052));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3052));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3053));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3053));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3054));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3054));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3055));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3055));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3056));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3056));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3057));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3057));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3058));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3058));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3059));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3059));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3060));
-fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3060));
-fclose(outfile2);
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3042));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3042));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3043));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3043));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3044));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3044));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3045));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3045));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3046));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3046));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3047));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3047));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3048));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3048));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3049));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3049));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3050));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3050));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3051));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3051));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3052));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3052));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3053));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3053));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3054));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3054));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3055));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3055));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3056));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3056));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3057));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3057));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3058));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3058));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3059));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3059));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,4,3060));
+% fprintf(outfile2,'\n %9.10f',SIGMA(2,2,2,3060));
+% fclose(outfile2);
 
