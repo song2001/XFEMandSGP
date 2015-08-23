@@ -1,7 +1,7 @@
 function resid = globalresidual(dt,ndof,coords,nelem,connect,materialprops,stress,eplas,dofs,MAT,rG,ee,ep,eta,nne,tu,...
-    enrich_node,elem_crk,type_elem,xTip,xVertex,split_elem,tip_elem,vertex_elem,pos,xCrk)
+    enrich_node,elem_crk,type_elem,xTip,xVertex,split_elem,tip_elem,vertex_elem,pos,xCrk,step)
 
-global elemType
+global elemType STRAINP stress_pnt strainp1_val strainp2_val strainp3_val strainp4_val
 node=coords';
 element=connect';
 %
@@ -17,7 +17,14 @@ element=connect';
 %
    for lmn = 1 : nelem
 
-    sctr = element(lmn,:) ;
+    sctr = element(lmn,:) ; 
+    coordN=node(sctr',:);
+    if step>1 && MAT==3
+    STRAINP(lmn,:,1) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp1_val,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,2) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp2_val,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,3) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp3_val,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,4) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp4_val,coordN(:,1),coordN(:,2), 'linear');
+    end %Consider replacing griddata with scatteredinterpolant
     
     %choose Gauss quadrature rules for elements
     [W,Q] = gauss_rule(lmn,enrich_node,elem_crk,...
@@ -91,7 +98,7 @@ element=connect';
         Ppoint =  N' * node(sctr,:);
         strain = B*U ;   
             
-      stressE = elresid(dt,ndof,lmncoord,materialprops,lmnstress,lmneplas,strain,MAT,lmn,lmnR,lmnETAP,lmnEE,lmnEPL,kk);
+      stressE = elresid(dt,ndof,lmncoord,materialprops,lmnstress,lmneplas,strain,MAT,lmn,lmnR,lmnETAP,lmnEE,lmnEPL,kk,coordN,Gpt);
 
       stresst(1)=stressE(1,1);
       stresst(2)=stressE(2,2);

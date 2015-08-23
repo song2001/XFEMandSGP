@@ -1,8 +1,8 @@
 function GK=globalK(dt,ndof,coords,nelem,connect,materialprops,stress,eplas,w,MAT,rG,ee,eta,nne,tu,...
-    enrich_node,elem_crk,type_elem,xTip,xVertex,split_elem,tip_elem,vertex_elem,pos,xCrk)
+    enrich_node,elem_crk,type_elem,xTip,xVertex,split_elem,tip_elem,vertex_elem,pos,xCrk,step)
 
 %declare global variables here
-global elemType INTP
+global elemType stress_pnt
 
 node=coords';
 element=connect';
@@ -21,7 +21,7 @@ element=connect';
 %
    for lmn = 1:nelem
        
-   sctr = element(lmn,:);  % X-FEM feature
+   sctr = element(lmn,:);  
    
 %choose Gauss quadrature rules for elements
    [W,Q]=gauss_rule(lmn,enrich_node,elem_crk,xTip,xVertex,tip_elem,split_elem,vertex_elem,xCrk,node,element);   
@@ -29,11 +29,16 @@ element=connect';
 %Transfrom these Gauss points to global coords for plotting ONLY
     for igp = 1:size(W,1)
         gpnt = Q(igp,:) ;
-        [N,dNdxi] = lagrange_basis(elemType,gpnt) ;
+        [N,~] = lagrange_basis(elemType,gpnt) ;
         Gpnt = N'*node(sctr,:) ;
-        if lmn==3041
-        GpTT(igp,:)=Gpnt;    
+        
+        if step==1
+          stress_pnt = [stress_pnt; Gpnt] ;  
         end
+        
+%         if lmn==3041
+%         GpTT(igp,:)=Gpnt;    
+%         end
 %       node1=[0.5774 0.5774; 0.5774 -0.5774;-0.5774 0.5774;-0.5774 -0.5774];
 %        %node1=[1.4226 1.4226; -1.4226 1.4226;-1.4226 -1.4226;1.4226 -1.4226]; % For lmn==3159
 %        node1=[-1.4226 -1.4226; 1.4226 -1.4226;1.4226 1.4226;-1.4226 1.4226]; % For lmn==3041

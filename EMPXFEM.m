@@ -1,6 +1,6 @@
-function [SIGMA,stress_pnt,stress_val]=EMPXFEM(xCrk,XY,XY1,LE,LE1,MAT,PROP,Dnodes,SOL,Dloads,enrType,Q)
+function [SIGMA,stress_val]=EMPXFEM(xCrk,XY,XY1,LE,LE1,MAT,PROP,Dnodes,SOL,Dloads,enrType,Q)
 
-global STRAINP
+global STRAINP strainp1_val strainp2_val strainp3_val strainp4_val stress_pnt
 %
 % 2D plane strain X-FEM code
 % Current implementation: linear and quadratic elements with 4 Gauss points
@@ -98,6 +98,11 @@ rG=zeros(300,NE);
 EE=zeros(4,300,NE);
 EPL=zeros(4,300,NE);
 ETAP=zeros(300,NE);
+strainp1_val=[]; 
+strainp2_val=[];
+strainp3_val=[];
+strainp4_val=[];
+stress_pnt=[];
 
 STRAINP=zeros(NE,4,4);
 
@@ -122,10 +127,10 @@ for step = 1 : SOL(1)
    nit = nit + 1;
    % Compute the global stiffness matrix, force vector and residual   
    GK=globalK(dt,Ndof,XY',NE,LE',PROP,SIGMA,EP,w,MAT,rG,EE,ETAP,NNE,TU,...
-      enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,pos,xCrk); 
+      enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,pos,xCrk,step); 
    GF=globaltraction(Ndof,ndload,XY',LE',Dloads,w,NNE,TU);
    R = globalresidual(dt,Ndof,XY',NE,LE',PROP,SIGMA,EP,w,MAT,rG,EE,EPL,ETAP,NNE,TU,...
-       enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,pos,xCrk);
+       enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,pos,xCrk,step);
    b = loadfactor*GF - R;
   
    % Prescribed displacements
@@ -159,7 +164,7 @@ for step = 1 : SOL(1)
   end
     
 % Update the stress and accumulated plastic strain
-     [SIGMA,EP,rG,ETAP,EE,EPL,stress_pnt,stress_val] = update_state(dt,Ndof,XY',NE,LE',PROP,SIGMA,EP,w,MAT,rG,ETAP,EE,EPL,NNE,...
+     [SIGMA,EP,rG,ETAP,EE,EPL,stress_val] = update_state(dt,Ndof,XY',NE,LE',PROP,SIGMA,EP,w,MAT,rG,ETAP,EE,EPL,NNE,...
          enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,pos,xCrk,SOL,step);
      
 % Update the total displacecment

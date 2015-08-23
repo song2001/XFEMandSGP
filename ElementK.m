@@ -50,7 +50,7 @@ function dsde = ElementK(dt,nelnodes,coord,materialprops,stress0,eplas0,MAT,rE,e
     D = ELAST(materialprops);
     dsde=combHardTanS(materialprops,D,deps',stressi0,r);
    elseif MAT==3
-      gausscord(N,coord,nelem,intpt,nelnodes); 
+      %gausscord(N,coord,nelem,intpt,nelnodes); 
     for j=1:3
       deps(j) = strain(j);
     end  

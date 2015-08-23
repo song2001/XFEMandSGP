@@ -1,5 +1,5 @@
-function [stress1,ep1,r1,etap1,ee1,epl1,stress_pnt,stress_val] = update_el_state(dt,ndof,coord,materialprops,stress0,eplas0,U,MAT,nelem,rE,egrad0,ee0el,epl0el,n,...
-    type_elem,enrich_node,elem_crk,xVertex,node,element,W,Q,sctr,xCrk,tip_elem,SOL,step,stress_pnt,stress_val)
+function [stress1,ep1,r1,etap1,ee1,epl1,stress_val] = update_el_state(dt,ndof,coord,materialprops,stress0,eplas0,U,MAT,nelem,rE,egrad0,ee0el,epl0el,n,...
+    type_elem,enrich_node,elem_crk,xVertex,node,element,W,Q,sctr,xCrk,tip_elem,SOL,step,stress_val,coordN)
 
 global elemType
 %
@@ -59,7 +59,6 @@ global elemType
         [N,dNdxi] = lagrange_basis(elemType,Gpt) ;
         JO = node(sctr,:)'*dNdxi ;
         pt = N' * node(sctr,:);
-        Gpnt = N'*node(sctr,:) ;
         for k = 1:size(xCrk,2)
             B = [B xfemBmat(Gpt,nelem,type_elem,enrich_node(:,k),elem_crk,xVertex,k,node,element,MAT,tip_elem)] ;
         end
@@ -92,7 +91,7 @@ global elemType
        for j=1:3
         deps(j) = strain(j);
        end 
-       [stress, dep, dee, depl, detap]=combHardC(materialprops,deps',ep0,ee0,epl0,eta0,kk,nelem);
+       [stress, dep, dee, depl, detap]=combHardC(materialprops,deps',ep0,ee0,epl0,eta0,kk,nelem,coordN,Gpt(1),Gpt(2));
       elseif MAT==1
         dep = deplas(dt,stressi0,ep0,strain,materialprops);
         stress = materialstressP(stressi0,dep,strain,materialprops);
@@ -101,7 +100,7 @@ global elemType
       end
       
       if step==SOL(1) %Plot stress contours
-        stress_pnt = [stress_pnt; pt] ;
+%        stress_pnt = [stress_pnt; pt] ;
         stress_val = [stress_val; stress(2,2)] ;      
       end    
       

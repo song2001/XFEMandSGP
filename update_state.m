@@ -1,6 +1,7 @@
-function [stress_new,eplas_new,r_new,eta_new,ee_new,ep_new,stress_pnt,stress_val] = update_state(dt,ndof,coords,nelem,connect,materialprops,stress,eplas,dofs,MAT,rG,eta,ee,ep,nne,...
+function [stress_new,eplas_new,r_new,eta_new,ee_new,ep_new,stress_val] = update_state(dt,ndof,coords,nelem,connect,materialprops,stress,eplas,dofs,MAT,rG,eta,ee,ep,nne,...
      enrich_node,elem_crk,type_elem,xTip,xVertex,split_elem,tip_elem,vertex_elem,pos,xCrk,SOL,step)
 
+ global STRAINP stress_pnt strainp1_val strainp2_val strainp3_val strainp4_val
 node=coords';
 element=connect';
 %   Assemble the global stiffness matrix
@@ -8,7 +9,6 @@ element=connect';
    lmncoord = zeros(ndof,nne);
    lmndof = zeros(ndof,nne);
    
-   stress_pnt =  [ ] ;
    stress_val = [ ] ;
 %
 %   Loop over all the elements
@@ -16,7 +16,15 @@ element=connect';
    for lmn = 1 : nelem
        
     sctr = element(lmn,:) ;
-    
+    coordN=node(sctr',:);
+     
+    if MAT==3
+    STRAINP(lmn,:,1) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp1_val,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,2) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp2_val,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,3) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp3_val,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,4) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp4_val,coordN(:,1),coordN(:,2), 'linear');
+    end
+%Consider replacing griddata with scatteredinterpolant
     %choose Gauss quadrature rules for elements
     [W,Q] = gauss_rule(lmn,enrich_node,elem_crk,...
         xTip,xVertex,tip_elem,split_elem,vertex_elem,xCrk,node,element) ;
@@ -65,8 +73,8 @@ element=connect';
       end
       end
       
-      [lmnstress,lmneplas,lmnR,lmnETAP,lmnEE,lmnEPL,stress_pnt,stress_val] = update_el_state(dt,ndof,lmncoord,materialprops,lmnstress,lmneplas,U,MAT,lmn,lmnR,lmnETAP,lmnEE,lmnEPL,n,...
-          type_elem,enrich_node,elem_crk,xVertex,node,element,W,Q,sctr,xCrk,tip_elem,SOL,step,stress_pnt,stress_val);
+      [lmnstress,lmneplas,lmnR,lmnETAP,lmnEE,lmnEPL,stress_val] = update_el_state(dt,ndof,lmncoord,materialprops,lmnstress,lmneplas,U,MAT,lmn,lmnR,lmnETAP,lmnEE,lmnEPL,n,...
+          type_elem,enrich_node,elem_crk,xVertex,node,element,W,Q,sctr,xCrk,tip_elem,SOL,step,stress_val,coordN);
 %
       if MAT > 0   
        for a = 1 : nintp
