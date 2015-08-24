@@ -126,8 +126,8 @@ for step = 1 : SOL(1)
    
    nit = nit + 1;
    % Compute the global stiffness matrix, force vector and residual   
-   GK=globalK(dt,Ndof,XY',NE,LE',PROP,SIGMA,EP,w,MAT,rG,EE,ETAP,NNE,TU,...
-      enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,pos,xCrk,step); 
+   GK=globalK(dt,Ndof,XY',NE,LE',PROP,SIGMA,EP,w,MAT,rG,EE,ETAP,NNE,TU,enrichNode,elemCrk,...
+      typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,pos,xCrk,step,nit); 
    GF=globaltraction(Ndof,ndload,XY',LE',Dloads,w,NNE,TU);
    R = globalresidual(dt,Ndof,XY',NE,LE',PROP,SIGMA,EP,w,MAT,rG,EE,EPL,ETAP,NNE,TU,...
        enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,pos,xCrk,step);

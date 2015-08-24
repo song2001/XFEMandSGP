@@ -1,5 +1,5 @@
 function GK=globalK(dt,ndof,coords,nelem,connect,materialprops,stress,eplas,w,MAT,rG,ee,eta,nne,tu,...
-    enrich_node,elem_crk,type_elem,xTip,xVertex,split_elem,tip_elem,vertex_elem,pos,xCrk,step)
+    enrich_node,elem_crk,type_elem,xTip,xVertex,split_elem,tip_elem,vertex_elem,pos,xCrk,step,nit)
 
 %declare global variables here
 global elemType stress_pnt
@@ -30,10 +30,10 @@ element=connect';
     for igp = 1:size(W,1)
         gpnt = Q(igp,:) ;
         [N,~] = lagrange_basis(elemType,gpnt) ;
-        Gpnt = N'*node(sctr,:) ;
+        pt = N' * node(sctr,:);
         
-        if step==1
-          stress_pnt = [stress_pnt; Gpnt] ;  
+        if step==1 && nit==1
+          stress_pnt = [stress_pnt; pt] ;  
         end
         
 %         if lmn==3041
@@ -58,7 +58,7 @@ element=connect';
 %        INTP(lmn,igp,1)= Temp(1);
 %        INTP(lmn,igp,2)= Temp(2);
 %        end       
-        q = [q;Gpnt] ;
+        q = [q;pt] ;
     end   
     
 % Kind of strain-displacement matrix to be computed / Global DOFs associated with the element  
