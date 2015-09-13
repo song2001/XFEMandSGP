@@ -21,7 +21,10 @@ if Q(1)==8 && Q(2)==4
 [Enrdomain] = crackDetect(xCrk,Enrdomain,XY1,LE1) ;
 % Classify elements
 [typeElem,elemCrk,tipElem,splitElem,vertexElem,xTip,xVertex,enrichNode]=nodeDetect(xCrk,Enrdomain,XY1,LE1) ;
-enrichNode(numel(XY(:,1))) = 0;
+[enrichNode1]=nodeDetect1(xCrk,Enrdomain,XY,LE,typeElem,elemCrk,xVertex) ;
+enrichNode(numel(XY(:,1))) = 0; %fill with 0s the DOFs associated to intermediate nodes
+temp=find(enrichNode1(:,1) == 2); %temp=find(enrichNode(:,1) == 2); temp= enrichNode(:,1) == 2
+enrichNode(temp)=2;
 else
 [Enrdomain] = crackDetect(xCrk,Enrdomain,XY,LE) ;
 % Classify elements
