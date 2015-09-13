@@ -1,5 +1,5 @@
 function resid = globalresidual(dt,ndof,coords,nelem,connect,materialprops,stress,eplas,dofs,MAT,rG,ee,ep,eta,nne,tu,...
-    enrich_node,elem_crk,type_elem,xTip,xVertex,split_elem,tip_elem,vertex_elem,pos,xCrk,step)
+    enrich_node,elem_crk,type_elem,xTip,xVertex,split_elem,tip_elem,vertex_elem,pos,xCrk,step,nit)
 
 global elemType STRAINP stress_pnt strainp1_val strainp2_val strainp3_val strainp4_val
 node=coords';
@@ -12,6 +12,11 @@ element=connect';
    lmncoord = zeros(ndof,nne);
    lmndof = zeros(ndof,nne);
    rel = zeros(ndof*nne,ndof*nne);
+   
+   % Empty strainp1_val, make strainp1_valTemp=strainp1
+   strainp1_val0=strainp1_val; strainp2_val0=strainp2_val; strainp3_val0=strainp3_val; strainp4_val0=strainp4_val;
+   strainp1_val=[]; strainp2_val=[]; strainp3_val=[]; strainp4_val=[];
+   
 %
 %   Loop over all the elements
 %
@@ -19,12 +24,19 @@ element=connect';
 
     sctr = element(lmn,:) ; 
     coordN=node(sctr',:);
-    if step>1 && MAT==3
-    STRAINP(lmn,:,1) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp1_val,coordN(:,1),coordN(:,2), 'linear');
-    STRAINP(lmn,:,2) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp2_val,coordN(:,1),coordN(:,2), 'linear');
-    STRAINP(lmn,:,3) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp3_val,coordN(:,1),coordN(:,2), 'linear');
-    STRAINP(lmn,:,4) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp4_val,coordN(:,1),coordN(:,2), 'linear');
+    [Nlines, ~] = size(coordN);
+    if Nlines>4
+     coordN(5,:)=[];  coordN(5,:)=[];  coordN(5,:)=[]; coordN(5,:)=[];
+    end
+    
+    if MAT==3
+    if step>1 || nit>2
+    STRAINP(lmn,:,1) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp1_val0,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,2) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp2_val0,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,3) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp3_val0,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,4) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp4_val0,coordN(:,1),coordN(:,2), 'linear');
     end %Consider replacing griddata with scatteredinterpolant
+    end
     
     %choose Gauss quadrature rules for elements
     [W,Q] = gauss_rule(lmn,enrich_node,elem_crk,...

@@ -10,6 +10,8 @@ element=connect';
    lmndof = zeros(ndof,nne);
    
    stress_val = [ ] ;
+   strainp1_val0=strainp1_val; strainp2_val0=strainp2_val; strainp3_val0=strainp3_val; strainp4_val0=strainp4_val;
+   strainp1_val=[]; strainp2_val=[]; strainp3_val=[]; strainp4_val=[];
 %
 %   Loop over all the elements
 %
@@ -19,10 +21,10 @@ element=connect';
     coordN=node(sctr',:);
      
     if MAT==3
-    STRAINP(lmn,:,1) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp1_val,coordN(:,1),coordN(:,2), 'linear');
-    STRAINP(lmn,:,2) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp2_val,coordN(:,1),coordN(:,2), 'linear');
-    STRAINP(lmn,:,3) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp3_val,coordN(:,1),coordN(:,2), 'linear');
-    STRAINP(lmn,:,4) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp4_val,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,1) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp1_val0,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,2) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp2_val0,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,3) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp3_val0,coordN(:,1),coordN(:,2), 'linear');
+    STRAINP(lmn,:,4) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp4_val0,coordN(:,1),coordN(:,2), 'linear');
     end
 %Consider replacing griddata with scatteredinterpolant
     %choose Gauss quadrature rules for elements

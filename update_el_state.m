@@ -91,7 +91,7 @@ global elemType
        for j=1:3
         deps(j) = strain(j);
        end 
-       [stress, dep, dee, depl, detap]=combHardC(materialprops,deps',ep0,ee0,epl0,eta0,kk,nelem,coordN,Gpt(1),Gpt(2));
+       [stress, dep, dee, depl, detap]=combHardC(materialprops,deps',ep0,ee0,epl0,eta0,nelem,coordN,Gpt(1),Gpt(2));
       elseif MAT==1
         dep = deplas(dt,stressi0,ep0,strain,materialprops);
         stress = materialstressP(stressi0,dep,strain,materialprops);
