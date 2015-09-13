@@ -19,6 +19,11 @@ element=connect';
        
     sctr = element(lmn,:) ;
     coordN=node(sctr',:);
+    
+    [Nlines, ~] = size(coordN);
+    if Nlines>4
+     coordN(5,:)=[];  coordN(5,:)=[];  coordN(5,:)=[]; coordN(5,:)=[];
+    end  
      
     if MAT==3
     STRAINP(lmn,:,1) = griddata(stress_pnt(:,1),stress_pnt(:,2),strainp1_val0,coordN(:,1),coordN(:,2), 'linear');
