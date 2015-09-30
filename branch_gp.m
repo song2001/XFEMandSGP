@@ -11,17 +11,22 @@ function [f,dfdx,dfdy] = branch_gp(r,theta,alpha,MAT)
 %   alpha     : inclination of the crack tip segment w.r.t x axis
 
 if( r ~=0 )
-    %if MAT==3
-    %r2 = r^(2/3);   
-    %else
+    if MAT==3
+    r2 = r^(1/3);   
+    else
     r2 = sqrt(r);
-    %end
+    end
 else
     r2    = 0.1d-4;
     theta = 0.0d0 ;
 end
 
-fac  = 0.5/r2 ;
+if MAT==3
+ fac = (1/3)*(r^(-2/3));   
+else
+ fac  = 0.5/r2 ;
+end
+
 
 st2  = sin(theta/2.)    ;
 ct2  = cos(theta/2.)    ;

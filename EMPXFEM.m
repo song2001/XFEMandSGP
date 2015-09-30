@@ -25,6 +25,7 @@ if Q(1)==8 && Q(2)==4
 enrichNode(numel(XY(:,1))) = 0; %fill with 0s the DOFs associated to intermediate nodes
 temp=find(enrichNode1(:,1) == 2); %temp=find(enrichNode(:,1) == 2); temp= enrichNode(:,1) == 2
 enrichNode(temp)=2;
+enrichNode(9677)=2; %temporary solution
 else
 [Enrdomain] = crackDetect(xCrk,Enrdomain,XY,LE) ;
 % Classify elements
