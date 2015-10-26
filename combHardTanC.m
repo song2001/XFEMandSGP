@@ -10,7 +10,7 @@ function [Dtan]=combHardTanC(mp,D,deps,epN,eeN,etaN)
  tol=1E-6;
  mu=mp(1)/(2*(1+mp(2)));
  K=mp(1)/(3*(1-2*mp(2)));
- if all(deps)==0
+ if any(deps)==0
   Dtan = D;
  else
  Iden = [1 1 0 1]'; 

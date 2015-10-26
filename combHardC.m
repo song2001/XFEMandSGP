@@ -11,7 +11,7 @@ global STRAINP strainp1_val strainp2_val strainp3_val strainp4_val
  tol=1E-6;
  mu=mp(1)/(2*(1+mp(2)));
  K=mp(1)/(3*(1-2*mp(2)));
- if all(deps)==0
+ if any(deps)==0
   stress = zeros(3,3); dp=0.0; EELAS=zeros(1,4); EPLAS=zeros(1,4); EQGRAD=0.0;
  else 
  Iden = [1 1 0 1]'; 

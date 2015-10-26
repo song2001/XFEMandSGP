@@ -46,8 +46,8 @@ global elemType
 %
 %  Set up integration points and weights    
 %
-   xilist = integrationpoints(ndof,n,npoints);
-   w = integrationweights(ndof,n,npoints);   
+%   xilist = integrationpoints(ndof,n,npoints);
+%   w = integrationweights(ndof,n,npoints);   
    %
 %  Loop over the integration points
 %
