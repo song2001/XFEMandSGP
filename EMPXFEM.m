@@ -40,7 +40,7 @@ if strcmp(enrType,'geom')
   tipArea = geominfo(1) ;
   % geometrix/fixed area enrichment
   cnt = 0 ;
-  fa_fac = 50; % fixed area factor..!!
+  fa_fac = 500; % fixed area factor..!!
   Renr = fa_fac*tipArea ;
   %Renr = 1 ;
   xcent = xCrk(1).coor(2,:) ;
